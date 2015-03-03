@@ -16,3 +16,6 @@ Run the tweetfetcher
 python3 TweetFetcher.py
 ```
 
+##Authentication
+Copy credentials to myCredentials.py
+Then find your own credentials at apps.twitter.com and enter them into myCredentials.py
