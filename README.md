@@ -19,3 +19,10 @@ python3 TweetFetcher.py
 ##Authentication
 Copy credentials to myCredentials.py
 Then find your own credentials at apps.twitter.com and enter them into myCredentials.py
+
+
+#Documentation
+- [Pipeline](http://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html)
+- [CounterVectorizer](http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.CountVectorizer.html)
+- [Tfid Transformer](http://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfTransformer.html#sklearn.feature_extraction.text.TfidfTransformer)
+- [OneVsRestClassifier](http://scikit-learn.org/stable/modules/generated/sklearn.multiclass.OneVsRestClassifier.html)
