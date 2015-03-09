@@ -6,6 +6,9 @@ import signal
 import sys
 import myCredentials as credentials
 
+hashtag = "NetNeutrality"
+
+
 q = JoinableQueue()
 
 def init_worker():
@@ -15,7 +18,7 @@ def jsonWriter():
     signal.signal(signal.SIGINT, signal.SIG_IGN)
     while True:
         data = q.get()
-        with open('tweets.json', 'a') as f:
+        with open('tweets/' + hashtag + '.json', 'a') as f:
             f.write(data + '\n')
         q.task_done()
 
@@ -25,11 +28,17 @@ def mkJson(tweet):
 
 if __name__ == '__main__':
 
-
     # Define some parameters
-    query = ['test']
+    query = ['#' + hashtag]
     lang = 'en'
     include_entities = False
+
+    if(len(sys.argv) == 2):
+        hashtag = sys.argv[1]
+    elif (len(sys.argv) == 3):
+        hashtag = sys.argv[1]
+        lang = sys.argv[2]
+
 
     #This process is responsible for writing to the file
     writer = Process(target=jsonWriter, )
