@@ -18,7 +18,7 @@ class TweetParser:
                 lines = int(f.readline())
         except:
             lines = 0
-        filepath = 'tweets/' + hashtag + '.json'
+        filepath = 'new_tweets/' + hashtag
         self.f = open(filepath, 'r')
         self.f.seek(lines)
         self.target_names = ["Hostile", "Nice", "Happy", "Sad", "Angry"]
@@ -30,11 +30,18 @@ class TweetParser:
         t = self.f.readline()
 
         if t != '':
+            tweet = {'text': t, 'id': self.f.tell()}
+            self.tweets[tweet['id']] = tweet
+            with open('.linenum', 'w') as f:
+                f.write(str(self.f.tell()))
+            return tweet
+            """ old json stuff
             tweet = json.loads(t)
             self.tweets[tweet['id']] = tweet
             with open('.linenum', 'w') as f:
                 f.write(str(self.f.tell()))
             return tweet
+            """
         else:
             return None
 
@@ -99,7 +106,9 @@ class TweetParser:
                 i+=1
                 tweet = self.getNextTweet()
         else:
-            for tweet in self.get_tagged_tweets():
+            tweets = self.get_tagged_tweets()
+            tweets = tweets[0:300]
+            for tweet in tweets:
                 if 'tags' in tweet.keys():
                     trainArr.append(tweet['text'])
                     y_train.append(tweet['tags'])
@@ -119,23 +128,20 @@ class TweetParser:
         return True
 
     def test(self):
-        if self.classifier != None:
+        if self.classifier == None:
             return False
 
-        x_test = []
-        i = 0
-        tweet = self.getNextTweet()
-        while i < 5 and tweet:
-            x_test.append(tweet['text'])
+        tweets = self.get_tagged_tweets()
 
-            i+=1
-            tweet = self.getNextTweet()
+        tweets = tweets[300:]
+
+        x_test = []
+        for tweet in tweets:
+            x_test.append(tweet['text'])
 
         predicted = self.predict(x_test)
 
-        for tweet, prediction in zip(x_test, predicted):
-            print('%s => %s' % (tweet, ', '.join(self.target_names[x] for x in prediction)))
-        return predicted
+        return predicted, tweets
 
 if __name__ == '__main__':
     # Define some parameters
@@ -145,5 +151,5 @@ if __name__ == '__main__':
         hashtag = sys.argv[1]
 
     t = TweetParser(hashtag)
-    t.train(tag_tweets=True)
+    t.train()
     t.test()

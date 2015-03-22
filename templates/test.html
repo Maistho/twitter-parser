@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{% for cat in cats %}
+<div class="card green darken-4">
+	<div class="card-content white-text">
+		<span class="card-title">{{cat['name']}}</span>
+		<p>
+		Precision: {{cat['precision']}} <br/>
+		Recall: {{cat['recall']}}
+		</p>
+	</div>
+</div>
+{%endfor%}
+{% for tag in tagging %}
+<p>{{tag}}</p>
+{%endfor%}
+{%endblock%}
