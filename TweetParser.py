@@ -31,11 +31,20 @@ class TweetParser:
         x_test = []
         tweet = self.getNextTweet()
         i = 0
-        print('say "h" for hostile, and anything else for non-hostile')
+        print('Enter the first letter of the category you think' +
+              'the tweet belongs to.\n')
+        #User Feedback-loopen
         while tweet and i < 10:
-            h = input(tweet['text'] + '\n')
-            y_train.append([ 0 if h=='h' else 1])
+            print(tweet['text'] + '\n')
+            for metric in target_names:
+                printable_categories = ", ".join(metric)
+                user_input = input("Is it " + printable_categories + "? ")
+                for category in metric:
+                    if user_input[0] == category[0]:
+                        y_train.append(category)
             trainArr.append(tweet['text'])
+##            h = input(tweet['text'] + '\n')
+##            y_train.append([ 0 if h=='h' else 1])
 
             i+=1
             tweet = self.getNextTweet()
@@ -51,7 +60,8 @@ class TweetParser:
 
         x_train = np.array(trainArr)
 
-        target_names = ['Hostile', 'Not hostile']
+        target_names_2d = [["Hostile", "Nice"], ["Happy", "Sad", "Angry"]]
+        target_names = {"Hostile": 0, "Nice": 1, "Happy": 2, "Sad": 3, "Angry": 4}
 
         self.model = {
                 'target_names': target_names,
