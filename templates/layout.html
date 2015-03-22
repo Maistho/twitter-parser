@@ -2,27 +2,39 @@
 	<head>
 		<title>Tagger</title>
 		<!-- Compiled and minified CSS -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.95.3/css/materialize.min.css" />
+		<link rel="stylesheet" href="{{ url_for('static', filename='lib/materialize/dist/css/materialize.min.css') }}" />
 		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 
 	</head>
 	<body>
-		<div class="container">
 			<nav>
 				<div class="nav-wrapper">
 					<a href="#" class="brand-logo">Twitter-Parser</a>
+					<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
 					<ul id="nav-mobile" class="right hide-on-med-and-down">
+						<li><a href="/">Tag</a></li>
+						<li><a href="train">Train</a></li>
+						<li><a href="predict">Predictions</a></li>
+					</ul>
+					<ul class="side-nav" id="mobile-demo">
 						<li><a href="/">Tag</a></li>
 						<li><a href="train">Train</a></li>
 						<li><a href="predict">Predictions</a></li>
 					</ul>
 				</div>
 			</nav>
+		<div class="container">
 			{%block body%}
 			{%endblock%}
 		</div>
 		<!-- Compiled and minified JavaScript -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.95.3/js/materialize.min.js"></script>
+		<script src="{{ url_for('static', filename='lib/jquery/dist/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='lib/materialize/dist/js/materialize.min.js') }}"></script>
+		<script>
+$(document).ready(function() {
+	$(".button-collapse").sideNav();
+});
+		</script>
 	</body>
 </html>
 

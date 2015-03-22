@@ -13,9 +13,14 @@ class TweetParser:
 
     def __init__(self, hashtag):
         self.hashtag = hashtag
+        try:
+            with open('.linenum', 'r') as f:
+                lines = int(f.readline())
+        except:
+            lines = 0
         filepath = 'tweets/' + hashtag + '.json'
         self.f = open(filepath, 'r')
-        self.tagged = open('tags/' + hashtag + '.json', 'r')
+        self.f.seek(lines)
         self.target_names = ["Hostile", "Nice", "Happy", "Sad", "Angry"]
         self.tweets = {}
         self.classifier = None
@@ -27,6 +32,8 @@ class TweetParser:
         if t != '':
             tweet = json.loads(t)
             self.tweets[tweet['id']] = tweet
+            with open('.linenum', 'w') as f:
+                f.write(str(self.f.tell()))
             return tweet
         else:
             return None
@@ -40,12 +47,18 @@ class TweetParser:
         else:
             return False
 
-    def get_tagged_tweet(self):
-        t = self.tagged.readline()
+    def get_tagged_tweets(self):
 
-        if t != '':
-            tweet = json.loads(t)
-            return tweet
+        with open('tags/' + self.hashtag + '.json', 'r') as f:
+
+            tweets = []
+            t = f.readline()
+            while t != '':
+                tweet = json.loads(t)
+                tweets.append(tweet)
+                t = f.readline()
+        if len(tweets) > 0:
+            return tweets
         else:
             return None
 
@@ -86,12 +99,10 @@ class TweetParser:
                 i+=1
                 tweet = self.getNextTweet()
         else:
-            tweet = self.get_tagged_tweet()
-            while tweet:
+            for tweet in self.get_tagged_tweets():
                 if 'tags' in tweet.keys():
                     trainArr.append(tweet['text'])
                     y_train.append(tweet['tags'])
-                tweet = self.get_tagged_tweet()
             if len(y_train) == 0 or len(trainArr) == 0 or len([item for sublist in y_train for item in sublist]) == 0:
                 return False
 

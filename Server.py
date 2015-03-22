@@ -2,9 +2,9 @@ from flask import Flask, render_template, request
 from TweetParser import TweetParser
 app = Flask(__name__)
 
-app.host = '0.0.0.0'
 
-myparser = TweetParser('NetNeutrality')
+app.debug = True
+myparser = TweetParser('gamergate')
 
 @app.route("/", methods=['GET', 'POST'])
 def hello():
@@ -39,4 +39,4 @@ def predict():
     return render_template('predict.html', tweet = tweet, prediction = predicted, categories=myparser.target_names)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
