@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="row">
+	<div class="col m10 offset-m1">
+		<div class="card blue-grey">
+			<div class="card-content white-text">
+				<p>{{tweet['text']}}</p>
+			</div>
+			<div class="card-content white-text">
+				{% if prediction %}
+				<h4>Tagged as:</h4>
+				{% for pred in prediction %}
+				{% for p in pred %}
+				<p>{{categories[p]}}</p>
+				{%endfor%}
+				{%endfor%}
+				{%else%}
+				<p>Cannot predict anything. Make sure that the model is trained</p>
+				{%endif%}
+			</div>
+		</div>
+	</div>
+</div>
+{%endblock%}

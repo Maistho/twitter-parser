@@ -12,8 +12,10 @@ from pprint import pprint
 class TweetParser:
 
     def __init__(self, hashtag):
+        self.hashtag = hashtag
         filepath = 'tweets/' + hashtag + '.json'
         self.f = open(filepath, 'r')
+        self.tagged = open('tags/' + hashtag + '.json', 'r')
         self.target_names = ["Hostile", "Nice", "Happy", "Sad", "Angry"]
         self.tweets = {}
         self.classifier = None
@@ -30,11 +32,29 @@ class TweetParser:
             return None
 
     def add_tags(self, id, tags):
-        self.tweets[id]['tags'] = tags
+        if type(tags) is list:
+            self.tweets[id]['tags'] = tags
+            with open('tags/' + self.hashtag + '.json', 'a') as f:
+                f.write(json.dumps(self.tweets[id]) + '\n')
+            return True
+        else:
+            return False
 
-    def classify_tweets(self, tweets):
-        predicted = self.classifier.predict(tweets)
-        return predicted
+    def get_tagged_tweet(self):
+        t = self.tagged.readline()
+
+        if t != '':
+            tweet = json.loads(t)
+            return tweet
+        else:
+            return None
+
+    def predict(self, tweets):
+        if self.classifier != None:
+            predicted = self.classifier.predict(tweets)
+            return predicted
+        else:
+            return None
 
     def __get_categories(self):
         categories = []
@@ -66,11 +86,14 @@ class TweetParser:
                 i+=1
                 tweet = self.getNextTweet()
         else:
-            for tweet in self.tweets.values():
+            tweet = self.get_tagged_tweet()
+            while tweet:
                 if 'tags' in tweet.keys():
                     trainArr.append(tweet['text'])
                     y_train.append(tweet['tags'])
-
+                tweet = self.get_tagged_tweet()
+            if len(y_train) == 0 or len(trainArr) == 0 or len([item for sublist in y_train for item in sublist]) == 0:
+                return False
 
         x_train = np.array(trainArr)
 
@@ -82,6 +105,7 @@ class TweetParser:
 
         classifier.fit(x_train, y_train)
         self.classifier = classifier
+        return True
 
     def test(self):
         if self.classifier != None:
@@ -96,7 +120,7 @@ class TweetParser:
             i+=1
             tweet = self.getNextTweet()
 
-        predicted = self.classify_tweets(x_test)
+        predicted = self.predict(x_test)
 
         for tweet, prediction in zip(x_test, predicted):
             print('%s => %s' % (tweet, ', '.join(self.target_names[x] for x in prediction)))

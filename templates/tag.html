@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="row">
+	<div class="col m10 offset-m1">
+		<div class="card blue-grey">
+			<div class="card-content white-text">
+				<p>{{tweet['text']}}</p>
+			</div>
+			<div class="card-content white-text">
+				<form action="/" method="post">
+					<input type="hidden" name="tweetId" value="{{tweet['id']}}" />
+					{% for cat in categories %}
+					<div>
+						<input name="category" type="checkbox" id="checkbox-{{cat}}" value="{{cat}}"/>
+						<label for="checkbox-{{cat}}">{{cat}}</label>
+					</div>
+					{% endfor %}
+					<button type="submit" class="btn card-submit-button waves-effect waves-light">Submit<i class="mdi-content-send right"></i></button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{%endblock%}

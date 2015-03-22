@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{% if success %}
+<p> Successfully trained the model</p>
+{% else %}
+<p> Couldn't build a model. Did you tag some tweets first?</p>
+{% endif %}
+{%endblock%}
