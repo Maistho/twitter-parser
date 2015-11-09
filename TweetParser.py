@@ -60,7 +60,10 @@ class TweetParser:
 
             tweets = []
             t = f.readline()
-            while t != '':
+            while t and t != '':
+                if t == "\n":
+                    t = f.readline()
+                    continue
                 tweet = json.loads(t)
                 tweets.append(tweet)
                 t = f.readline()

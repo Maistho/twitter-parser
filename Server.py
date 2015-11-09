@@ -36,7 +36,16 @@ def recall(c, tweets):
             else:
                 fn+=1
 
+    if tp+fn == 0:
+        return float('nan')
+
     return tp/(tp+fn)
+def count(c, tweets):
+    count = 0
+    for tweet in tweets:
+        if c in tweet['tags']:
+            count += 1
+    return count
 
 @app.route("/", methods=['GET', 'POST'])
 def hello():
@@ -84,11 +93,18 @@ def test():
         cats.append({
             'name': myparser.target_names[c],
             'recall': recall(c, new_tweets),
-            'precision': precision(c, new_tweets)
+            'precision': precision(c, new_tweets),
+            'count': count(c, new_tweets)
             })
-    tagging = []
+        tagging = []
     for tweet, prediction in zip(tweets, predicted):
-        tagging.append('%s: %s => %s' % (tweet['text'], ', '.join(myparser.target_names[x] for x in tweet['tags']), ', '.join(myparser.target_names[x] for x in prediction)))
+        'green' if len([e for e in prediction if e in tweet['tags']]) >0 else 'red'
+        tagging.append({
+            'text': tweet['text'],
+            'gold': ', '.join(myparser.target_names[x] for x in tweet['tags']),
+            'pred': ', '.join(myparser.target_names[x] for x in prediction),
+            'color': 'green' if len([e for e in prediction if e in tweet['tags']]) >0 else 'red'
+        })
 
     return render_template('test.html', cats=cats, tagging=tagging)
 

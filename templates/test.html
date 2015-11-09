@@ -7,12 +7,16 @@
 		<span class="card-title">{{cat['name']}}</span>
 		<p>
 		Precision: {{cat['precision']}} <br/>
-		Recall: {{cat['recall']}}
+		Recall: {{cat['recall']}} <br />
+		Total we tagged: {{cat['count']}}
 		</p>
 	</div>
 </div>
 {%endfor%}
 {% for tag in tagging %}
-<p>{{tag}}</p>
+<div class="card lighten-4 {{tag['color']}}">
+	<p>{{tag['text']}}</p>
+	<p>{{tag['gold']}} =&gt {{tag['pred']}}</p>
+</div>
 {%endfor%}
 {%endblock%}
